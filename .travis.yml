@@ -1,0 +1,41 @@
+language: perl
+perl:
+    - "5.18"
+    - "5.16"
+    - "5.14"
+    - "5.12"
+    - "5.10"
+
+notifications:
+    irc:
+        channels:
+            - "chat.freenode.net#exobrain"
+        on_success: change
+        on_failure: always
+        skip_join: true
+        template:
+            - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
+
+before_install:
+    # Exobrain binary requirements
+    - sudo apt-get install libzmq3-dev libexpat-dev libnet-ssleay-perl libnet-libidn-perl libcrypt-ssleay-perl cpanminus make liblocal-lib-perl
+
+install:
+
+    # ZMQ requires us to specify at build-time what back-end
+    # we'll use. Travis comes with ZMQ3 pre-installed.
+    - export PERL_ZMQ_BACKEND=ZMQ::LibZMQ3
+
+    - cpanm --notest --skip-satisfied Dist::Zilla
+
+    # SMS::Send seems to have issues with MakeMaker shipped with
+    # virgin 5.16. So start up upgrading MakeMaker.
+    # See miyagawa/cpanminus#291 for details
+
+    - cpanm --notest ExtUtils::MakeMaker
+
+    - dzil authordeps         | cpanm --notest --skip-satisfied
+    - dzil listdeps --author  | cpanm --notest --skip-satisfied
+
+script:
+    - dzil test --all
