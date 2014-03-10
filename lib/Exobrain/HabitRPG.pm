@@ -28,7 +28,7 @@ sub setup {
     print "API token: ";
     chomp( my $api = <STDIN> );
 
-    print "User ID ";
+    print "User ID: ";
     chomp( my $user = <STDIN> );
 
     # Check to see if we auth okay.
