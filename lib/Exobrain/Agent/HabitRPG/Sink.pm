@@ -5,7 +5,7 @@ use Moose;
 with 'Exobrain::Agent::HabitRPG';
 with 'Exobrain::Agent::Run';
 
-# ABSTRACT: Send personal log events to iDoneThis
+# ABSTRACT: Complete or fail a goal on HabitRPG
 # VERSION
 
 method run() {
